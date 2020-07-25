@@ -1,0 +1,320 @@
+---
+layout: post
+title:  "Using an API to Gather IMDB Data"
+date:   2020-06-11 12:00:00 +0000
+categories: IMDB API Python
+---
+
+**_TL:DR_**   
+IMDB (International Movie DataBase) Api compiled from different sources, see code sections or my Github for implementation
+
+Sections:
+- Difficulty trying to make use of or gather IMDB data now
+- IMDB suggestions API
+- Scraping
+- OMDB API
+- Results
+
+### Difficulty trying to make use of or gather IMDB data now
+How many times have you been thinking of working on a cool movie or actor related project only to be frustrated with how you will be able to gather or access the data? I know personally I have had many stops and starts with related ideas caused mainly with the finickiness and intricacies of retrieving the data. Hopes quickly dashed by not wanting to fork out for a premium account when all I have is an idea for a side project.  
+One day early 2020 I had an assignment for a data science module for my Master's degree and had a fun idea, you know one of those project ideas that immediately becomes your focus and you lunge to the nearest writing surface to pen down and sketch out all you can before the fleeting inspiration evaporates.
+After a lot of google-fu and trial and error here is the implementation I came to that worked for me. Pulling together multiple sources I was able to create a coherent dataset which I used in more complicated data analysis and machine learning models.  
+
+### IMDB suggestions API
+The first step was made easier thanks to IMDB's search API being public. Their suggestion API is what you get when you type anything into the page search bar, returning names of actors, their pictures and movies.  
+The format is `https://sg.media-imdb.com/suggests/{first letter}/{search}.json`  
+Say as an example we want to look up international superstar Nicolas Cage's IMDB page we can search for:
+`https://sg.media-imdb.com/suggests/n/nicolas%20cage.json`  
+This query gives us:
+```json
+{
+  "v": 1,
+  "q": "nicolas_cage",
+  "d": [
+    {
+      "l": "Nicolas Cage",
+      "id": "nm0000115",
+      "s": "Actor, Face/Off (1997)",
+      "vt": 229,
+      "i": [
+        "https://m.media-amazon.com/images/M/MV5BMjUxMjE4MTQxMF5BMl5BanBnXkFtZTcwNzc2MDM1NA@@._V1_.jpg",
+        1503,
+        2048
+      ],
+      "v": [
+        {
+          "l": "Nicolas Cage Looks Back at His Most Memorable Movie Roles",
+          "id": "vi1390458905",
+          "s": "2:27",
+          "i": [
+            "https://m.media-amazon.com/images/M/MV5BNWE5NDJkMDMtZGViMi00ODQ4LTgzOWQtNGU3ZGYzNDRmMDBjXkEyXkFqcGdeQXVyNjMwMzc3MjE@._V1_.jpg",
+            1920,
+            1080
+          ]
+        },
+        {
+          "l": "Trailer",
+          "id": "vi3960192537",
+          "s": "2:48",
+          "i": [
+            "https://m.media-amazon.com/images/M/MV5BMzk0Y2E5ZWEtZWQzYi00ZDBmLWFkNjEtMjBiNWFmMThhZDdmXkEyXkFqcGdeQXRyYW5zY29kZS13b3JrZmxvdw@@._V1_.jpg",
+            1920,
+            1080
+          ]
+        },
+        {
+          "l": "Nicolas Cage: Movie Moments",
+          "id": "vi825014809",
+          "s": "1:26",
+          "i": [
+            "https://m.media-amazon.com/images/M/MV5BNzE0YzY4ODItNTU3Ny00MzdhLWFkMTAtMGZiNDVhYWRkMzMyXkEyXkFqcGdeQXRodW1ibmFpbC1pbml0aWFsaXplcg@@._V1_.jpg",
+            1920,
+            1080
+          ]
+        }
+      ]
+    },
+    {
+      "l": "Nicolas Coster",
+      "id": "nm0182661",
+      "s": "Actor, Santa Barbara (1984-1993)",
+      "vt": 2,
+      "i": [
+        "https://m.media-amazon.com/images/M/MV5BNDY3NTE0MTgyN15BMl5BanBnXkFtZTcwODYxMzgzMQ@@._V1_.jpg",
+        450,
+        675
+      ],
+      "v": [
+        {
+          "l": "Betsy's Wedding",
+          "id": "vi950969625",
+          "s": "1:23",
+          "i": [
+            "https://m.media-amazon.com/images/M/MV5BNWU1MWJkYjgtNDZmZS00N2Y2LWJkYTQtNjYxNGMyZWE2YWU1XkEyXkFqcGdeQXVyNzU1NzE3NTg@._V1_.jpg",
+            480,
+            360
+          ]
+        },
+        {
+          "l": "Dancing on a Dry Salt Lake",
+          "id": "vi3178103321",
+          "s": "3:17",
+          "i": [
+            "https://m.media-amazon.com/images/M/MV5BMjAzMjM1ODk1N15BMl5BanBnXkFtZTcwMjEyNDc4Mg@@._V1_.jpg",
+            480,
+            360
+          ]
+        }
+      ]
+    },
+    {
+      "l": "Nicolas Cantu",
+      "id": "nm7751235",
+      "s": "Actor, The Walking Dead: World Beyond (2020)",
+      "i": [
+        "https://m.media-amazon.com/images/M/MV5BNTAxZGRhMjAtZGVhNC00MDMxLWE3N2YtYWYzOGQ3MTFlYjliXkEyXkFqcGdeQXVyNjUxNDcyMzg@._V1_.jpg",
+        1024,
+        1536
+      ]
+    },
+    {
+      "l": "Nicolas Cowan",
+      "id": "nm0184610",
+      "s": "Actor, Surf Ninjas (1993)"
+    },
+    {
+      "l": "Nicholas Colicos",
+      "id": "nm0171476",
+      "s": "Actor, Kingsman: The Golden Circle (2017)"
+    },
+    {
+      "l": "Nicolas CazalÃ©",
+      "id": "nm1002627",
+      "s": "Actor, Le grand voyage (2004)",
+      "i": [
+        "https://m.media-amazon.com/images/M/MV5BMTA4ODE0MTYxNjNeQTJeQWpwZ15BbWU3MDk3MjEzMzI@._V1_.jpg",
+        485,
+        725
+      ]
+    },
+    {
+      "l": "Nicola Scott",
+      "id": "nm0779622",
+      "s": "Actress, Indiana Jones and the Last Crusade (1989)"
+    },
+    {
+      "l": "Nicolas Carpentier",
+      "id": "nm2210055",
+      "s": "Actor, Genius (2018)",
+      "i": [
+        "https://m.media-amazon.com/images/M/MV5BZTM4MDc1YTEtOGExNi00ZjQwLTgyYTktNGQ3MTY5YTdkYjY4XkEyXkFqcGdeQXVyMTM4NzY2OTg@._V1_.jpg",
+        2880,
+        1920
+      ]
+    }
+  ]
+}   
+```
+
+This step is necessary for retrieving the IMDB Id we need to find the IMDB page for the actor movies.
+For the above data our Id for ole Nick is `nm0000115`  
+Let's wrap it up in some nice python code for our API interface so we can automate this process whenever we need to update our data.  
+
+```python
+import csv
+import json
+import requests
+
+from typing import Any, Dict, List, Union
+
+from bs4 import BeautifulSoup
+
+JsonType = Dict[str, Any]
+
+def get_actor_imdb_info(name: str) -> JsonType:
+    """
+    For a given actor name return their IMDB data consisting of Name, Id and Image URL
+
+    Keyword arguments:
+    name: str - Name of actor that will be searched for on IMBD.com
+    
+    Returns: Jsontype - json data from imdb search
+    """
+    search_name: str = ''.join(name.split(' ')).lower()
+    imdb_suggestions_url: str = f"https://sg.media-imdb.com/suggests/{name[0].lower()}/{search_name}.json"
+    res = requests.get(imdb_suggestions_url)
+    valid_json_str: str = res.text[(5 + len(name)):-1]
+    json_data: JsonType = json.loads(valid_json_str)['d'][0]
+    return json_data
+```
+
+### Scraping
+With the actor Id we can find their IMDB page and this is where we have to get very creative.  
+When you go to an actor's IMDB page you can scroll down and be presented with a list of their acting credits. Clicking on a credit will bring you to the corresponding IMDB page for that movie or tv show. So the metaphorical teeth we have to pull are the Ids in the html links to these pages.  
+The python library `BeautifulSoup` is the defacto tool for fixing this gap. See the code below. By passing in just the Id we recently acquired we find the html page for the actor, go to the necessary section, find all link tags and take the Id out of the href for links that are a title.  
+Unfortunately this is the breakpoint in this operation given how it depends on classes and Ids not changing for the web page. I would not recommend, because of this, using it in any large scale or enterprise environments.  
+
+```python
+def get_actors_credits_by_imdb_id(act_id: str) -> List[str]:
+    """
+    Returns a list of Ids of the Actors acting credits from IMDB
+
+    Keyword arguments:
+    act_id: str - Actor's IMDB Id
+
+    Returns: List[str] - List of IMDB Ids of Actor's acting credits
+    """
+    film_ids: List[str] = []
+    actor_url: str = f"https://www.imdb.com/name/{act_id}"
+    actor_page = requests.get(actor_url)
+    html_soup: BeautifulSoup = BeautifulSoup(actor_page.text, 'html.parser')
+    films = html_soup.find_all('div', class_='filmo-category-section')
+    links = films[0].find_all('a')
+    for link in links:
+        if link.has_attr('href') and link.attrs['href'].startswith('/title'):
+            film_ids.append(link.attrs['href'].split('/')[2])
+    return film_ids
+```
+
+### OMDB API
+Okay good, you have your movie Ids. We can now plug these badboys into a nice black box that will handle the next section for us. That black box being [OMDB](http://www.omdbapi.com/). OMDB is its own self contained API interface that works just for movies, hence why we had to gather the movie Ids ourselves.
+For using OMDB for anything more than 1 or 2 test queries you will have to register an account to receive an API Key. Don't worry no money involved.  
+Development does seem to have stilled on this project but I only encountered minor error or blips from heavy use.
+The OMDB API has a max of 1000 queries a day so any larger projects may need to make use of a checkpoint (see below) or segment the Ids and store the data locally to a file yourself.
+
+```python
+def retrieve_credit_data_by_id(show_id: str) -> JsonType:
+    """
+    Movie data by imdb id
+
+    keyword arguments:
+    show_id: str - imdb id value for a movie/tv show
+
+    Return: JsonType - JSON data from the API
+    """
+    omdb_url: str = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&i={show_id}"
+    return requests.get(omdb_url).json()
+
+credits: List[JsonType] = []
+CHECKPOINT: int = 0
+
+def safe_retrieve_credit_data(credit_ids: List[str], checkpoint: int) -> int:
+    """
+    Retrieve data. If there is an error note the breakpoint
+    to continue from in subsequent runs
+
+    There are some Ids that randomly don't work for the OMDB Api
+    and return a generic error so need to be filtered out
+
+    Keyword argument:
+    credit_ids: List[str] - List of the IMDB Ids for movies and tv shows
+    checkpoint: int - The checkpoint number to carry on from
+
+    Return: int - the checkpoint index
+    """
+    for m_id in credit_ids[checkpoint:]:
+        res = retrieve_credit_data_by_id(m_id)
+        if 'Limit Reached' in res.get('Error', ''):
+            print(res.get('Error'))
+            return checkpoint
+        if res.get('Title', False):
+            credits.append(res)
+            checkpoint += 1
+    return checkpoint
+
+CHECKPOINT = safe_retrieve_credit_data(credit_ids=credit_ids, checkpoint=CHECKPOINT)
+```
+
+
+### Results
+_Et Viola_, we have our data stored in the `credits` variable. Checking it we can see the structure of the data.
+```json
+{
+ "Title": "Best of Times",
+ "Year": "1981",
+ "Rated": "N/A",
+ "Released": "N/A",
+ "Runtime": "95 min",
+ "Genre": "Comedy",
+ "Director": "Don Mischer",
+ "Writer": "Bob Arnott, Carol Hatfield, Lane Sarasohn",
+ "Actors": "Crispin Glover, Jill Schoelen, Nicolas Cage, Julie Piekarski",
+ "Plot": "Here's the lives of 7 teenage friends in 1981, singing, dancing and breaking the 4th wall.",
+ "Language": "English",
+ "Country": "USA",
+ "Awards": "N/A",
+ "Poster": "https://m.media-amazon.com/images/M/MV5BNjZlYTFiMzgtZWYwMS00OTExLWI3YmQtYTc5YzlmYzJiMTI0XkEyXkFqcGdeQXVyMzU0NzkwMDg@._V1_SX300.jpg",
+ "Ratings": [{"Source": "Internet Movie Database", "Value": "5.5/10"}],
+ "Metascore": "N/A",
+ "imdbRating": "5.5",
+ "imdbVotes": "197",
+ "imdbID": "tt0082064",
+ "Type": "movie",
+ "DVD": "N/A",
+ "BoxOffice": "N/A",
+ "Production": "N/A",
+ "Website": "N/A",
+ "Response": "True"
+}
+```
+
+You can take that info and do whatever you want with it now. Below is how to write to a csv file for further use for example.
+
+```python
+def write_credits_data_to_csv(credits: JsonType) -> None:
+    """
+    Convert movie data from json to csv and write to file
+
+    Keyword arguments:
+    credits: JsonType - JSON data from the OMDB API
+
+    Return: None
+    """
+    with open('credits_data.csv', 'w') as credits_file:
+        csv_writer = csv.DictWriter(credits_file, fieldnames=list(credits[0].keys()), delimiter=',')
+        csv_writer.writeheader()
+        for credit in credits:
+            csv_writer.writerow(credit)
+```
+
+I will be describing my project where I made use of this data method in detail soon so make sure to look out for that article!
