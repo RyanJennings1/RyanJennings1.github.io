@@ -1,4 +1,5 @@
-const POST_URL = "http://localhost:8080"
+// const POST_URL = "http://localhost:8080"
+const POST_URL = "https://europe-west2-eloquent-region-400815.cloudfunctions.net/vocab-est"
 // const RÁTA = 0.002438; // ráta na heaspónantúile dáilte
 const RÁTA = 0.00012; // ráta pioctha chun shampla níos fearr a fháil
 const MÉID_NA_BHFOCAL_LE_ÚSÁID = 20; // 20, 50, 100, srl.
