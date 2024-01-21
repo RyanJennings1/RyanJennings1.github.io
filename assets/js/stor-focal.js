@@ -114,9 +114,7 @@ async function ceistFhocalEile() {
   if (uimhir_focail_fheicthe > MÉID_NA_BHFOCAL_LE_ÚSÁID - 1) {
     // Críoch
     console.log('tuigthe: ', tuigthe);
-    const toradh = await faighRíomh(tuigthe, focail_an_chluiche);
-    console.log(`toradh: ${toradh}`);
-    léirighToradh(toradh);
+    léirighToradh(tuigthe);
   } else {
     uasdátaighScáileán();
   }
@@ -125,13 +123,15 @@ async function ceistFhocalEile() {
 /**
  * Léirigh an clogchuar agus an toradh ar an scáileán. Cuir na cnaipí i bhfolach.
  * 
- * @param {number} toradh - an méid focail a aithníonn an t-úsáideoir
+ * @param {number[]} tuigthe - na focail a aithníonn an t-úsáideoir
  */
-async function léirighToradh(toradh) {
+async function léirighToradh(tuigthe) {
   document.getElementById('bosca').style.display = "none";
   document.getElementById('ag-ríomh').style.display = "flex";
+  const toradh = await faighRíomh(tuigthe, focail_an_chluiche);
+  console.log(`toradh: ${toradh}`);
   // Tá cuma níos réidhe air nuair atá moill bheag ann
-  await moill(3000);
+  await moill(2000);
   document.getElementById('ag-ríomh').style.display = "none";
   document.getElementsByClassName('ag-lódáil')[0].style.display = "none";
 
@@ -139,8 +139,8 @@ async function léirighToradh(toradh) {
   document.getElementById('toradh').style.display = "block";
 
   // http://archive.sciendo.com/LIFIJSAL/lifijsal.2016.2.issue-2/lifijsal-2016-0008/lifijsal-2016-0008.pdf
-  const mu = 8121; // figiúr garbh don stór focal meánach
-  const sd = 5002; // figiúr garbh don stór focal diall caighdeánach
+  const mu = 5121; // figiúr garbh don stór focal meánach
+  const sd = 3002; // figiúr garbh don stór focal diall caighdeánach
   const z = (toradh - mu) / sd
   const céatadán = (Math.round((poz(z) + Number.EPSILON) * 10000) / 100);
   document.getElementById('masc').style.clipPath = `polygon(0 0, ${céatadán}% 0, ${céatadán}% 100%, 0 100%)`;
