@@ -139,8 +139,8 @@ async function léirighToradh(tuigthe) {
   document.getElementById('toradh').style.display = "block";
 
   // http://archive.sciendo.com/LIFIJSAL/lifijsal.2016.2.issue-2/lifijsal-2016-0008/lifijsal-2016-0008.pdf
-  const mu = 5121; // figiúr garbh don stór focal meánach
-  const sd = 3002; // figiúr garbh don stór focal diall caighdeánach
+  const mu = 7020; // figiúr ón dáta don stór focal meánach
+  const sd = 3338; // figiúr ón dáta don stór focal diall caighdeánach
   const z = (toradh - mu) / sd
   const céatadán = (Math.round((poz(z) + Number.EPSILON) * 10000) / 100);
   document.getElementById('masc').style.clipPath = `polygon(0 0, ${céatadán}% 0, ${céatadán}% 100%, 0 100%)`;

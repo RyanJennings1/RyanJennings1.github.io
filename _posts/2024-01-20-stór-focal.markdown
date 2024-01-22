@@ -97,3 +97,22 @@ cheated it at least has a better chance of proving a user's actual knowledge.
 Rather than a random selection from thousands of words, a hand chosen list of say 50 words could be picked
 and antonyms and synonyms along with wrong answers constructed for each of the 50 words. This would allow
 a smaller number of possible scores but would work better in blind tests.
+
+
+## Update  
+After running for a day we can take a look at some of the results from the Cloud Function logs.
+
+![Histogram](/assets/img/hist_focal.png)
+Here we have a nice histogram showing a slightly right skewed distribution. You can also note the larger
+number of high scores than expected at the end most likely from people just spamming the 'Tuigim' button.
+
+![Probablity Density Function](/assets/img/pdf_focal.png)
+Above is the probability density function that gives us a smoother view of how the results turned out.
+
+Using the dataset we can construct more accurate means and standard deviations from which to compare
+to others on the bell curve with.  
+After removing the outliers we get values of:
+```
+mean = 7020.41
+standard deviation = 3338.47
+```
