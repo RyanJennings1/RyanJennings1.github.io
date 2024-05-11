@@ -2,6 +2,9 @@
 permalink: /404.html
 layout: default
 ---
+{% if site.google_analytics and jekyll.environment == 'production' %}
+{% include analytics.html %}
+{% endif %}
 
 <style type="text/css" media="screen">
   .container {

@@ -4,6 +4,9 @@ title:  "Ar Bhréag an Phoist Deisce"
 date:   2022-11-10 12:00:00 +0000
 categories: gaeilge work
 ---
+{% if site.google_analytics and jekyll.environment == 'production' %}
+{% include analytics.html %}
+{% endif %}
 
 _TL:DR_
 Is deacair an rud é a ghabh leis an bpost deisce in ár saolta nua-aimseartha.

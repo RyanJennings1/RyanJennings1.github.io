@@ -4,6 +4,9 @@ title:  "Kadane's Algorithm"
 date:   2020-05-23 22:00:00 +0000
 categories: learning algorithms programming cs
 ---
+{% if site.google_analytics and jekyll.environment == 'production' %}
+{% include analytics.html %}
+{% endif %}
 
 **_TL:DR_**   
 Kadane's Algorithm explanation with its example use case in the Maximum Subarray problem

@@ -4,6 +4,9 @@ title:  "Using an API to Gather IMDB Data"
 date:   2020-06-11 12:00:00 +0000
 categories: IMDB API Python
 ---
+{% if site.google_analytics and jekyll.environment == 'production' %}
+{% include analytics.html %}
+{% endif %}
 
 **_TL:DR_**   
 IMDB (International Movie DataBase) Api compiled from different sources, see code sections or my Github for implementation

@@ -4,6 +4,9 @@ title:  "Stór Focal"
 date:   2024-01-20 12:00:00 +0000
 categories: gaeilge work
 ---
+{% if site.google_analytics and jekyll.environment == 'production' %}
+{% include analytics.html %}
+{% endif %}
 
 # Irish Language Vocabulary Estimation
 _TL:DR_
