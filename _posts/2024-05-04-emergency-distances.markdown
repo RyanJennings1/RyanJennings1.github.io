@@ -62,6 +62,19 @@ See the table for the entire list of 🏥 A&E coverages per county. Most countri
 | Cavan | 1.95 | 29.92 | 76.31 | 96.71 | 100.0 | 100.0 | 100.0 | 1927778805.91 |
 | Wexford | 3.78 | 32.94 | 72.11 | 95.04 | 98.48 | 99.38 | 99.66 | 2372348207.48 |
 
+## Population Coverage
+By taking existing census data in Ireland we can roughly work out how much of the population each of these areas cover.  
+
+Taking the [Deprivation Index dataset](https://data.gov.ie/dataset/pobal-hp-deprivation-index-scores-2022) which has an expansive list of small areas (over 14,000 across 26 counties) with corresponding population counts.
+Taking <span id="blue">Laois</span> as an example we can find the intersection for each timed area and the small areas from the deprivation index. Calculating rough figures we get:
+
+| county name | 10 min population | 20 min population  | 30 min population | 40 min population | 50 min population | 60 min population | 100 min population |
+|-------|--------|---------|-------|--------|---------|-------|--------|---------|-------|--------|---------|-------|--------|---------|
+| Laois | 39706 | 78070 | 91448 | 91877 | 91877 | 91877 | 91877 |
+
+Seeing how 99.87% of the county area wise is able to get to an A&E department in less than 40 minutes it seems reasonable that our population count tops out at 91,877, close to the estimated 2023 count of 91,657 people.
+We can also see that `39706/91877 x 100` = `43.22%` of the population of Laois can reach an A&E department in less than 10 mintues!
+
 ## Conclusion
 The technology behind the map is easy to update for future hospital plans while being very low cost to run. Data science is a necessary tool that can be leveraged to promote a more equitable society in Ireland that provides equally of access to health services throughout the Ireland North and South. 
 
@@ -223,6 +236,22 @@ for bucket in merged_isochrones:
       county_areas[county] = [area(intersection)]
 ```
 
+### Population Estimates
+I was able to join the [Deprivation Index dataset](https://data.gov.ie/dataset/pobal-hp-deprivation-index-scores-2022) with the existing county areas and the [CSO Small Areas dataset](https://data.gov.ie/dataset/census-small-area/resource/5d70d7b8-b479-4128-aa35-4ecc08164ef4) on the small area id `ED_ID_STR`. By checking for an intersection in the Polygons and simply adding up the populations I was able to roughly esimate the counts for the population for each time bucket for each county.
+
+For example:
+```python
+bucket_pops = []
+for bucket in merged_isochrones:
+  b_pop = 0
+  seen = set([])
+  for loc in laois_coord_data:
+    if loc['ED_ID_STR'] in deprivation_data and loc['ED_ID_STR'] not in seen and intersects(Polygon(loc['coordinates'][0][0]), bucket):
+      b_pop += int(Decimal(deprivation_data[loc['ED_ID_STR']]['population'].replace(',', '')))
+      seen.add(loc['ED_ID_STR'])
+  bucket_pops.append(b_pop)
+```
+
 <style>
   .newtab img {
     height: 1em;
@@ -238,5 +267,8 @@ for bucket in merged_isochrones:
   }
   #green {
     color: green;
+  }
+  #blue {
+    color: blue;
   }
 </style>
