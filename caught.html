@@ -1,0 +1,35 @@
+---
+permalink: /caught.html
+layout: default
+---
+{% if site.google_analytics and jekyll.environment == 'production' %}
+{% include analytics.html %}
+{% endif %}
+
+<div class="container">
+  <h1>HALT</h1>
+  <p>You can been caught sneaking on the user's profile</p>
+  <br>
+  <p>The owner has been notified and your IP: <span id="ip_ad"></span> has been logged</p>
+</div>
+
+<script>
+  fetch('https://api.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('ip_ad').innerText = data.ip;
+    })
+    .catch(error => {
+        console.error('Error fetching IP:', error);
+    });
+</script>
+
+<style>
+  h1 {
+    color: #cc3300;
+  }
+
+  #ip_ad {
+    font-weight: 800
+  }
+</style>
