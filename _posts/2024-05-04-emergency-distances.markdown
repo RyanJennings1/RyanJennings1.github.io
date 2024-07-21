@@ -11,6 +11,8 @@ date:   2024-05-04 12:00:00 +0000
 _TL:DR_
 Check out << [this map](/ae-distances.html) >> to see how far you are from a 🏥 hospital emergency department <a href="/ae-distances.html" class="newtab" target="_blank">![New Tab](/assets/img/newtab.png)</a>.
 
+**Update:** As featured in [Galway Beo](https://www.galwaybeo.ie/news/ireland-news/galway-hospital-nightmare-photos-show-9291688)
+
 ---
 <br>
 
